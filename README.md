@@ -140,3 +140,10 @@ Part H: Run the Complete Workflow and Produce Evidence
     > Write output/lab4_report.json. 
     > Create function for generating output/lab4_vector_preview.png. 
     > Create function for generating output/lab4_raster_preview.png. 
+
+Part I: Testing and Debugging markdown
+- Created tests/test_spatial.py and tests/test_analysis.py, using small hand-crafted synthetic parcels/grids instead of the full dataset, so expected outputs can be verified by hand rather than assumed.
+- test_spatial.py verifies Parcel.from_dict(...) sets the expected parcel_id, zone, activity, area, and a real Shapely Polygon geometry with a matching bounding box.
+MOREOVER~~~~~~~
+- Added pytest.ini (pythonpath = src) at the project root so tests/ can import spatial/analysis without path errors, since the project uses a src-layout.
+- Ran pytest -v from the project root; all tests pass.
