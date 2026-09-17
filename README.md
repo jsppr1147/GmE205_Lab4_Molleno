@@ -175,81 +175,81 @@ CHALLENGES:
 1. Change the Policy Without Rewriting the Algorithm  
     -as shown in demo.py,  when changing the min_area or allowed_zones. the function implementation remains unchanged. 
 
-CODE:
-parcels = [Parcel.from_dict(record) for record in records]
-result_a = development_candidates(parcels, min_area=3000.0, allowed_zones={"Residential", "Commercial"})
-result_b = development_candidates(parcels, min_area=7000.0, allowed_zones={"Residential", "Commercial"})
-print(f"min_area=3000: {len(result_a)} candidates")
-print(f"min_area=7000: {len(result_b)} candidates")
+CODE:  
+parcels = [Parcel.from_dict(record) for record in records]  
+result_a = development_candidates(parcels, min_area=3000.0, allowed_zones={"Residential", "Commercial"})  
+result_b = development_candidates(parcels, min_area=7000.0, allowed_zones={"Residential", "Commercial"})  
+print(f"min_area=3000: {len(result_a)} candidates")  
+print(f"min_area=7000: {len(result_b)} candidates")  
 
-RESULT:
-min_area=3000: 58 candidates
-min_area=7000: 34 candidates
+RESULT:  
+min_area=3000: 58 candidates  
+min_area=7000: 34 candidates  
 
 2. Compose, Do Not Duplicate 
     - as shown in the run_lab4.py, the development_candidates already narrows the full parcel list down to the ones that pass the active/zone/area rule. The smaller list was simply passed into the intersecting_parcels, which then checks which of those remaining parcels overlap the area. Neither function needed to change, and I didn't have to write the active/zone/area logic a second time anywhere.
 
-CODE:
-    candidates = development_candidates(parcels, MIN_AREA, ALLOWED_ZONES)
-    study_area_candidates = intersecting_parcels(candidates, study_area)
+CODE:  
+    candidates = development_candidates(parcels, MIN_AREA, ALLOWED_ZONES)  
+    study_area_candidates = intersecting_parcels(candidates, study_area)  
 
 3. Explain One “Bad vs Good” Refactor  
     - as shown in the analysis.py, before settling the final version of the development_candidates, I have written it in the 'obvious' way like nesting each conditions separately. 
-EXAMPLE NESTING: 
-START CODE SAMPLE
-for parcel in parcels:
-    if parcel.is_active:
-        if parcel.zone == "Residential":
-            if parcel.area_sqm >= min_area:
-                candidates.append(parcel)
-        elif parcel.zone == "Commercial":
-            if parcel.area_sqm >= min_area:
-                candidates.append(parcel)
+EXAMPLE NESTING:   
+START CODE SAMPLE  
+for parcel in parcels:  
+    if parcel.is_active:  
+        if parcel.zone == "Residential":  
+            if parcel.area_sqm >= min_area:  
+                candidates.append(parcel)  
+        elif parcel.zone == "Commercial":  
+            if parcel.area_sqm >= min_area:  
+                candidates.append(parcel)  
 END CODE SAMPLE
     - the problem here is that I'd be writing the same area check once for each zone. To solve this, I created a function and mimic the solution presented on the class before (is_development_candidate). and another solution development_candidate which is only responsible for looping.
-GOOD CODE:
-# AFTER
-def is_development_candidate(parcel, min_area, allowed_zones): -->mimicked from class last week
-    if not parcel.is_active:
-        return False
-    if parcel.zone not in allowed_zones:
-        return False
-    if parcel.area_sqm < min_area:
-        return False
-    return True
+GOOD CODE:  
+AFTER  
+def is_development_candidate(parcel, min_area, allowed_zones): -->mimicked from class last week  
+    if not parcel.is_active:  
+        return False  
+    if parcel.zone not in allowed_zones:  
+        return False  
+    if parcel.area_sqm < min_area:  
+        return False  
+    return True  
 
-def development_candidates(parcels, min_area, allowed_zones):
-    candidates = []
-    for parcel in parcels:
-        if is_development_candidate(parcel, min_area, allowed_zones):
-            candidates.append(parcel)
-    return candidates 
+def development_candidates(parcels, min_area, allowed_zones):  
+    candidates = []  
+    for parcel in parcels:  
+        if is_development_candidate(parcel, min_area, allowed_zones):  
+            candidates.append(parcel)  
+    return candidates   
 
 4.  Transfer the Algorithmic Pattern 
     - comparing the vector loop and raster loop.
 
-CODE COMPARISON:
-# Vector
-for parcel in parcels:
-    if is_development_candidate(parcel, min_area, allowed_zones):
-        candidates.append(parcel)
+CODE COMPARISON:  
+# Vector  
+for parcel in parcels:  
+    if is_development_candidate(parcel, min_area, allowed_zones):  
+        candidates.append(parcel)  
 
-# Raster
-for r in range(rows):
-    for c in range(cols):
-        if slope_grid[r][c] is None or flood_grid[r][c] is None:
-            result_row.append(None)
-        elif slope_grid[r][c] <= max_slope and flood_grid[r][c] <= max_flood:
-            result_row.append(1)
-        else:
-            result_row.append(0)
-END COMPARISON
+# Raster  
+for r in range(rows):    
+    for c in range(cols):  
+        if slope_grid[r][c] is None or flood_grid[r][c] is None:  
+            result_row.append(None)  
+        elif slope_grid[r][c] <= max_slope and flood_grid[r][c] <= max_flood:  
+            result_row.append(1)  
+        else:  
+            result_row.append(0)  
+END COMPARISON  
     - The code followed similar structure for loading data first -> analyze it -> report (in that order). Also in both cases, the thresholds are set as parameters which are not hardcoded in the function. 
     - The code differs from the data shape: The parcel is flat so a single loop would suffice while the raster is 2-dimensional, meaning it needs a loop for the rows and another for the columns. 
     - Another difference is that the Parcel is an object that can answer questions itself like parcel.is_active or parcel.intersects(). While the raster, I have to write out the suitability logic since the raster only contains values with no behavior on its own. 
 
 
-# Reflections
+# Reflections  
 1. ALGORITHM. For the development_candidates question, writing the pseudocode helped me decide what the variables do I use, the conditions need to set, and the return type before actually implementing it in Python. When I'm implementing it, there wasn't much to change since the Python change is simply a translation not the designing itself.
 
 2. CONTROL FLOW. The sequence appears as load -> construct -> validate -> analyze -> loop -> report. Selection appears inside the is_development_candidate's guard clauses and inside classify_suitability_grid's NoData/threshold checks.  And Lastly, repetition appears as the single for-loop over parcels in each analysis.py function, and as the nested for-loops over rows/columns in classify_suitability_grid.
