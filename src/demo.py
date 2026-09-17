@@ -36,6 +36,7 @@ print(f"With min_area=3000: {len(more)} candidates (was {len(candidates)} at 500
 fewer = development_candidates(parcels, 7000.0, ALLOWED_ZONES)
 print(f"With min_area=7000: {len(fewer)} candidates (was {len(candidates)} at 5000)")
 '''
+'''
 ####-----------RASTER---------------------######
 with open("data/suitability_grid.json", encoding="utf-8") as f:
     grid_data = json.load(f)
@@ -49,3 +50,12 @@ suitability = classify_suitability_grid(
 )
 print("Suitability grid:", suitability)
 print("Suitable cells:", count_suitable_cells(suitability))
+'''
+
+#challenges?
+#1. Change the Policy Without Rewriting the Algorithm
+parcels = [Parcel.from_dict(record) for record in records]
+result_a = development_candidates(parcels, min_area=3000.0, allowed_zones={"Residential", "Commercial"})
+result_b = development_candidates(parcels, min_area=7000.0, allowed_zones={"Residential", "Commercial"})
+print(f"min_area=3000: {len(result_a)} candidates")
+print(f"min_area=7000: {len(result_b)} candidates")

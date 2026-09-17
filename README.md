@@ -156,3 +156,20 @@ MOREOVER~~~~~~~
 - Added pytest.ini (pythonpath = src) at the project root so tests/ can import spatial/analysis without path errors, since the project uses a src-layout.
 - Verified the I.3 invariants are satisfied by the test set: zone counts sum to total parcels, every returned candidate independently passes active/zone/area checks, and raster output dimensions match input dimensions.
 - Ran pytest -v from the project root; all tests pass.
+
+
+CHALLENGES:
+1. Change the Policy Without Rewriting the Algorithm  
+    -as shown in demo.py,  when changing the min_area or allowed_zones. the function implementation remains unchanged. 
+
+CODE:
+parcels = [Parcel.from_dict(record) for record in records]
+result_a = development_candidates(parcels, min_area=3000.0, allowed_zones={"Residential", "Commercial"})
+result_b = development_candidates(parcels, min_area=7000.0, allowed_zones={"Residential", "Commercial"})
+print(f"min_area=3000: {len(result_a)} candidates")
+print(f"min_area=7000: {len(result_b)} candidates")
+
+RESULT:
+min_area=3000: 58 candidates
+min_area=7000: 34 candidates
+
