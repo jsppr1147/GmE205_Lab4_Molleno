@@ -127,3 +127,16 @@ Part G: Raster Transfer with Same Control Structures, Different Representation
 - added condition for 0, 1, and NULL data
 - returns the suitability grid and suitable cell count. 
 - updated the demo py for checking
+
+Part H: Run the Complete Workflow and Produce Evidence  
+- Updated runner to do the following:
+    > Load data/parcels_shapely_ready.json. 
+    > Construct Parcel objects through the object data boundary. 
+    > Stop or report clearly if no valid parcels are loaded. 
+    > Set the analysis parameters (threshold, allowed zones, study area). 
+    > Call the vector-analysis functions. 
+    > Load data/suitability_grid.json and call the raster-analysis functions. 
+    > Build a JSON-ready report using IDs/counts/numbers/primitive values. 
+    > Write output/lab4_report.json. 
+    > Create function for generating output/lab4_vector_preview.png. 
+    > Create function for generating output/lab4_raster_preview.png. 
