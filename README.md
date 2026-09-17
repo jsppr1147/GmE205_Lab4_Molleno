@@ -108,3 +108,8 @@ Part D: Structured Vector Analysis
 - created the five required functions: total_active_area, parcels_above_threshold, count_by_zone, development_candidates, intersecting_parcels.
 - Thresholds and zone rules (min_area, allowed_zones) are passed in as function parameters, not hardcoded, so the runner controls policy without editing analysis.py.
 - Verified correctness in demo.py against the D.4 reasonableness checks: zone counts sum to total parcel count, every development candidate independently satisfies the rule, candidates are a subset of all parcels, and changing min_area changes the result set. 
+
+Part E: Avoid Nested Conditional Chaos 
+- Created is_development_candidate to split the responsibility: is_development_candidate is a helper for deciding the rule for single parcel using guard clauses while the development_candidate is for the looping and repetition.
+- Verified if the checks on Part D still works. AND IZ OKAY. 
+- no rule duplications. the min_area and allowed_zones are already in the is_development_candidate.  

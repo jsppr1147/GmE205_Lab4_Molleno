@@ -23,12 +23,23 @@ def count_by_zone(parcels):
         counts[parcel.zone] += 1
     return counts
 
+def is_development_candidate(parcel, min_area, allowed_zones):
+    #added to avoid nesting
+    if not parcel.is_active:
+        return False
+    if parcel.zone not in allowed_zones:
+        return False
+    if parcel.area_sqm < min_area:
+        return False
+    return True
+
 def development_candidates(parcels, min_area, allowed_zones):
-    result = []
+    #updated by calling another function 
+    candidates = []
     for parcel in parcels:
-        if parcel.is_active and parcel.zone in allowed_zones and parcel.area_sqm >= min_area:
-            result.append(parcel)
-    return result
+        if is_development_candidate(parcel, min_area, allowed_zones):
+            candidates.append(parcel)
+    return candidates
 
 def intersecting_parcels(parcels, study_area):
     result = []
