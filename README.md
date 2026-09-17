@@ -211,3 +211,26 @@ def development_candidates(parcels, min_area, allowed_zones):
         if is_development_candidate(parcel, min_area, allowed_zones):
             candidates.append(parcel)
     return candidates 
+
+4.  Transfer the Algorithmic Pattern 
+    - comparing the vector loop and raster loop.
+
+CODE COMPARISON:
+# Vector
+for parcel in parcels:
+    if is_development_candidate(parcel, min_area, allowed_zones):
+        candidates.append(parcel)
+
+# Raster
+for r in range(rows):
+    for c in range(cols):
+        if slope_grid[r][c] is None or flood_grid[r][c] is None:
+            result_row.append(None)
+        elif slope_grid[r][c] <= max_slope and flood_grid[r][c] <= max_flood:
+            result_row.append(1)
+        else:
+            result_row.append(0)
+END COMPARISON
+    - The code followed similar structure for loading data first -> analyze it -> report (in that order). Also in both cases, the thresholds are set as parameters which are not hardcoded in the function. 
+    - The code differs from the data shape: The parcel is flat so a single loop would suffice while the raster is 2-dimensional, meaning it needs a loop for the rows and another for the columns. 
+    - Another difference is that the Parcel is an object that can answer questions itself like parcel.is_active or parcel.intersects(). While the raster, I have to write out the suitability logic since the raster only contains values with no behavior on its own. 
