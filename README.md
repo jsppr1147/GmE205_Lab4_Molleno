@@ -31,6 +31,12 @@ FOR each parcel in parcels
 END FOR    
 RETURN total_area
 
+Sequence: runs during the "analyze" step, after parcels are loaded and constructed
+Selection: IF parcel.is_active — decides whether a parcel's area counts
+Repetition: FOR each parcel in parcels — visits every parcel exactly once
+Input: list of Parcel
+Output: float
+
 QUESTION 2: Which parcels have area >= threshold?
 
 SET result = empty list
@@ -40,6 +46,12 @@ FOR each parcel in parcels
     END IF
 END FOR    
 RETURN result
+
+Sequence: runs during the "analyze" step, after parcels are loaded and constructed
+Selection: IF parcel.area_sqm >= threshold — decides whether a parcel is kept
+Repetition: FOR each parcel in parcels — visits every parcel exactly once
+Input: list of Parcel, threshold (float)
+Output: list[Parcel]
 
 QUESTION 3: How many parcels per zone?
 
@@ -52,6 +64,12 @@ FOR each parcel in parcels
 ENDFOR
 RETURN counts
 
+Sequence: runs during the "analyze" step, after parcels are loaded and constructed
+Selection: IF parcel.zone not in counts — decides whether a new zone key needs initializing
+Repetition: FOR each parcel in parcels — visits every parcel exactly once
+Input: list of Parcel
+Output: dict (zone name -> count)
+
 QUESTION 4: Which parcels are development candidates?
 
 SET result = empty list
@@ -62,6 +80,12 @@ FOR each parcel in parcels
 END FOR    
 RETURN result
 
+Sequence: runs during the "analyze" step, after parcels are loaded and constructed
+Selection: IF parcel.is_active AND parcel.zone in allowed_zones AND parcel.area_sqm >= min_area — decides whether a parcel qualifies
+Repetition: FOR each parcel in parcels — visits every parcel exactly once
+Input: list of Parcel, min_area (float), allowed_zones (list of str)
+Output: list[Parcel]
+
 QUESTION 5: Which parcels intersect the study area?
 
 SET result = empty list
@@ -71,3 +95,12 @@ FOR each parcel in parcels
     END IF
 END FOR    
 RETURN result
+
+Sequence: runs during the "analyze" step, after parcels are loaded and constructed
+Selection: IF parcel.intersects(study_area) — decides whether a parcel spatially overlaps the study area
+Repetition: FOR each parcel in parcels — visits every parcel exactly once
+Input: list of Parcel, study_area (SpatialObject)
+Output: list[Parcel]
+
+
+----------------------------------------------------------------------------------------------
