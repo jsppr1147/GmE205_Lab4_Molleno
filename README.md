@@ -173,3 +173,9 @@ RESULT:
 min_area=3000: 58 candidates
 min_area=7000: 34 candidates
 
+2. Compose, Do Not Duplicate 
+    - as shown in the run_lab4.py, the development_candidates already narrows the full parcel list down to the ones that pass the active/zone/area rule. The smaller list was simply passed into the intersecting_parcels, which then checks which of those remaining parcels overlap the area. Neither function needed to change, and I didn't have to write the active/zone/area logic a second time anywhere.
+
+CODE:
+    candidates = development_candidates(parcels, MIN_AREA, ALLOWED_ZONES)
+    study_area_candidates = intersecting_parcels(candidates, study_area)
