@@ -34,86 +34,86 @@ Part B. Carry Forward the Laboratory 3 Object Model
 PART C. Algorithm First: Expose the GIS Logic   
 
 C1. Analysis Questions:
-QUESTION 1:  What is the total area in square meters of all active parcels?
+QUESTION 1:  What is the total area in square meters of all active parcels?  
 
-SET total_area = 0
-FOR each parcel in parcels
-    IF parcel is active
-        ADD parcel area_sqm to total_area
-    END IF
-END FOR    
-RETURN total_area
+SET total_area = 0  
+FOR each parcel in parcels  
+    IF parcel is active  
+        ADD parcel area_sqm to total_area  
+    END IF  
+END FOR      
+RETURN total_area  
 
-Sequence: runs during the "analyze" step, after parcels are loaded and constructed
-Selection: IF parcel.is_active — decides whether a parcel's area counts
-Repetition: FOR each parcel in parcels — visits every parcel exactly once
-Input: list of Parcel
-Output: float
+Sequence: runs during the "analyze" step, after parcels are loaded and constructed.
+Selection: IF parcel.is_active — decides whether a parcel's area counts.
+Repetition: FOR each parcel in parcels — visits every parcel exactly once.
+Input: list of Parcel.
+Output: float.
 
-QUESTION 2: Which parcels have area >= threshold?
+QUESTION 2: Which parcels have area >= threshold?  
 
-SET result = empty list
-FOR each parcel in parcels
-    IF parcel.area_sqm >= threshold
-        ADD parcel to result
-    END IF
-END FOR    
-RETURN result
+SET result = empty list  
+FOR each parcel in parcels  
+    IF parcel.area_sqm >= threshold  
+        ADD parcel to result  
+    END IF  
+END FOR        
+RETURN result  
 
-Sequence: runs during the "analyze" step, after parcels are loaded and constructed
-Selection: IF parcel.area_sqm >= threshold — decides whether a parcel is kept
-Repetition: FOR each parcel in parcels — visits every parcel exactly once
-Input: list of Parcel, threshold (float)
-Output: list[Parcel]
+Sequence: runs during the "analyze" step, after parcels are loaded and constructed.
+Selection: IF parcel.area_sqm >= threshold — decides whether a parcel is kept.
+Repetition: FOR each parcel in parcels — visits every parcel exactly once.
+Input: list of Parcel, threshold (float).
+Output: list[Parcel].
 
-QUESTION 3: How many parcels per zone?
+QUESTION 3: How many parcels per zone?  
 
-SET counts = empty dictionary
-FOR each parcel in parcels
-    IF parcel.zone not in counts
-        SET counts[parcel.zone] = 0
-    END IF
-    ADD 1 to counts[parcel.zone] 
-ENDFOR
-RETURN counts
+SET counts = empty dictionary  
+FOR each parcel in parcels  
+    IF parcel.zone not in counts  
+        SET counts[parcel.zone] = 0  
+    END IF  
+    ADD 1 to counts[parcel.zone]  
+ENDFOR  
+RETURN counts  
 
-Sequence: runs during the "analyze" step, after parcels are loaded and constructed
-Selection: IF parcel.zone not in counts — decides whether a new zone key needs initializing
-Repetition: FOR each parcel in parcels — visits every parcel exactly once
-Input: list of Parcel
-Output: dict (zone name -> count)
+Sequence: runs during the "analyze" step, after parcels are loaded and constructed.
+Selection: IF parcel.zone not in counts — decides whether a new zone key needs initializing.
+Repetition: FOR each parcel in parcels — visits every parcel exactly once.
+Input: list of Parcel.
+Output: dict (zone name -> count).
 
-QUESTION 4: Which parcels are development candidates?
+QUESTION 4: Which parcels are development candidates?  
 
-SET result = empty list
-FOR each parcel in parcels
-    IF parcel.is_active AND parcel.zone in allowed_zones AND parcel.area_sqm >= min_area
-        ADD parcel to result
-    END IF
-END FOR    
-RETURN result
+SET result = empty list  
+FOR each parcel in parcels  
+    IF parcel.is_active AND parcel.zone in allowed_zones AND parcel.area_sqm >= min_area  
+        ADD parcel to result  
+    END IF  
+END FOR       
+RETURN result  
 
-Sequence: runs during the "analyze" step, after parcels are loaded and constructed
-Selection: IF parcel.is_active AND parcel.zone in allowed_zones AND parcel.area_sqm >= min_area — decides whether a parcel qualifies
-Repetition: FOR each parcel in parcels — visits every parcel exactly once
-Input: list of Parcel, min_area (float), allowed_zones (list of str)
-Output: list[Parcel]
+Sequence: runs during the "analyze" step, after parcels are loaded and constructed.
+Selection: IF parcel.is_active AND parcel.zone in allowed_zones AND parcel.area_sqm >= min_area — decides whether a parcel qualifies.
+Repetition: FOR each parcel in parcels — visits every parcel exactly once.
+Input: list of Parcel, min_area (float), allowed_zones (list of str).
+Output: list[Parcel].
 
-QUESTION 5: Which parcels intersect the study area?
+QUESTION 5: Which parcels intersect the study area?  
 
-SET result = empty list
-FOR each parcel in parcels
-    IF parcel.intersects(study_area)
-        ADD parcel to result
-    END IF
-END FOR    
-RETURN result
+SET result = empty list  
+FOR each parcel in parcels  
+    IF parcel.intersects(study_area)  
+        ADD parcel to result  
+    END IF  
+END FOR      
+RETURN result  
 
-Sequence: runs during the "analyze" step, after parcels are loaded and constructed
-Selection: IF parcel.intersects(study_area) — decides whether a parcel spatially overlaps the study area
-Repetition: FOR each parcel in parcels — visits every parcel exactly once
-Input: list of Parcel, study_area (SpatialObject)
-Output: list[Parcel]
+Sequence: runs during the "analyze" step, after parcels are loaded and constructed.
+Selection: IF parcel.intersects(study_area) — decides whether a parcel spatially overlaps the study area.
+Repetition: FOR each parcel in parcels — visits every parcel exactly once.
+Input: list of Parcel, study_area (SpatialObject).
+Output: list[Parcel].
 
 
 ----------------------------------------------------------------------------------------------
