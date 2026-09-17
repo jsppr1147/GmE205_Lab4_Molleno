@@ -113,3 +113,8 @@ Part E: Avoid Nested Conditional Chaos
 - Created is_development_candidate to split the responsibility: is_development_candidate is a helper for deciding the rule for single parcel using guard clauses while the development_candidate is for the looping and repetition.
 - Verified if the checks on Part D still works. AND IZ OKAY. 
 - no rule duplications. the min_area and allowed_zones are already in the is_development_candidate.  
+
+Part F: Spatial Predicate as Part of the Algorithm  
+- Updated run_lab4.py using a shapely.geometry.box. This is already wrapped in SpatialObject so it exposes the .intersects() interface as Parcel. 
+- No new spatial logic needed since SpatialObject already supports the instantiation.
+- Answered the question ("which development candidates also intersect the study area?") by composing existing functions.
