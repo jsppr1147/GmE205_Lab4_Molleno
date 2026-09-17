@@ -179,3 +179,35 @@ min_area=7000: 34 candidates
 CODE:
     candidates = development_candidates(parcels, MIN_AREA, ALLOWED_ZONES)
     study_area_candidates = intersecting_parcels(candidates, study_area)
+
+3. Explain One “Bad vs Good” Refactor  
+    - as shown in the analysis.py, before settling the final version of the development_candidates, I have written it in the 'obvious' way like nesting each conditions separately. 
+EXAMPLE NESTING: 
+START CODE SAMPLE
+for parcel in parcels:
+    if parcel.is_active:
+        if parcel.zone == "Residential":
+            if parcel.area_sqm >= min_area:
+                candidates.append(parcel)
+        elif parcel.zone == "Commercial":
+            if parcel.area_sqm >= min_area:
+                candidates.append(parcel)
+END CODE SAMPLE
+    - the problem here is that I'd be writing the same area check once for each zone. To solve this, I created a function and mimic the solution presented on the class before (is_development_candidate). and another solution development_candidate which is only responsible for looping.
+GOOD CODE:
+# AFTER
+def is_development_candidate(parcel, min_area, allowed_zones): -->mimicked from class last week
+    if not parcel.is_active:
+        return False
+    if parcel.zone not in allowed_zones:
+        return False
+    if parcel.area_sqm < min_area:
+        return False
+    return True
+
+def development_candidates(parcels, min_area, allowed_zones):
+    candidates = []
+    for parcel in parcels:
+        if is_development_candidate(parcel, min_area, allowed_zones):
+            candidates.append(parcel)
+    return candidates 
