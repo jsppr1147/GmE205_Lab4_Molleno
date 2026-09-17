@@ -1,7 +1,20 @@
 GmE 205 Lab 4: Spatial Algorithms and Structured Programming  
 --------------------------------------------------------------
 This laboratory focuses on the expression of familiar operations as algorithms and implement those algorithms using structured programming while maintaining the object-oriented responsibilities established in Lab 3. This laboratory has PARTS A-K, with part A being the setup of files and environment, Part B-H for the exercise, Part I for testing, Part J for the challenges and Part K for the Reflections and Summary. 
-
+--------------------------------------------------------------
+## Setup and Run Instructions
+1. Clone the repository and `cd` into the project root.
+2. Create and activate a virtual environment:
+   python -m venv .venv
+   .venv\Scripts\activate     
+3. Install dependencies:
+   pip install -r requirements.txt
+4. Run the test suite:
+   pytest -v
+5. Run the full workflow (must be run from the project root, since data paths are relative):
+   python src/run_lab4.py
+6. Outputs are written to output/lab4_report.json, output/lab4_vector_preview.png,
+   and output/lab4_raster_preview.png.
 --------------------------------------------------------------
 PART A. Project Setup and Reproducible Workspace  
 - The folder structure recommended for this exercise was created.  
