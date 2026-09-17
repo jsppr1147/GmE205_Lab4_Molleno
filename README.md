@@ -234,3 +234,22 @@ END COMPARISON
     - The code followed similar structure for loading data first -> analyze it -> report (in that order). Also in both cases, the thresholds are set as parameters which are not hardcoded in the function. 
     - The code differs from the data shape: The parcel is flat so a single loop would suffice while the raster is 2-dimensional, meaning it needs a loop for the rows and another for the columns. 
     - Another difference is that the Parcel is an object that can answer questions itself like parcel.is_active or parcel.intersects(). While the raster, I have to write out the suitability logic since the raster only contains values with no behavior on its own. 
+
+
+# Reflections
+1. ALGORITHM. For the development_candidates question, writing the pseudocode helped me decide what the variables do I use, the conditions need to set, and the return type before actually implementing it in Python. When I'm implementing it, there wasn't much to change since the Python change is simply a translation not the designing itself.
+
+2. CONTROL FLOW. The sequence appears as load -> construct -> validate -> analyze -> loop -> report. Selection appears inside the is_development_candidate's guard clauses and inside classify_suitability_grid's NoData/threshold checks.  And Lastly, repetition appears as the single for-loop over parcels in each analysis.py function, and as the nested for-loops over rows/columns in classify_suitability_grid.
+
+3. RESPONSIBILITY. Parcel.intersects(...) belongs to the object layer because the overlap is a fact about the geometry itself and the rule "active AND zone in {Residential, Commercial} AND area >= 5000" belongs to analysis.py because it is a project-specific decision, not an inherent property of the Parcel. 
+
+4. CONDITIONAL STRUCTURE. Splitting development_candidates into a guard-clause helper(is_development_candidate) and a separate coordinating loop prevents nested chaos. Each condition in the helper is an independent early return not nested inside the previous one, so the function reads as a flat checklist. Adding a new criterion means adding one more guard-clause line and not another indentation level.
+
+5. AREA MEANING. The parcel coordinates are longitude/latitude in degrees while Shapely's
+geometry.area computes planar area from whatever numbers it's given, with no awareness that these are angular coordinates on a curved earth. Moreover, area_sqm is a precomputed, trustworthy value already in the dataset, so it's the only value used for area throughout the project. 
+
+6. VECTOR VS RASTER. As mentioned in the challenges before, repetition over parcels is a single loop, because a list is already flat. Repetition over the rastergrid needs two nested loops (row, then column), because a 2D grid can't be reached with one loop. Both loops visit every unit exactly once, both ask one selection question per unit, and both keep policy values (thresholds, zones) as parameters rather than hardcoded constants.
+
+
+7. SCALE. The parameter arguments design and the guard-clause structure would remain useful since they don't depende on parcel or cell size. At a million parcel or at a 10000 by 10000 raster, the processing would be extremely slow and would need the help of indexing or an array library (like NumPy) to make processing efficient.
+
