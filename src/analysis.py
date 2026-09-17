@@ -47,3 +47,40 @@ def intersecting_parcels(parcels, study_area):
         if parcel.intersects(study_area):
             result.append(parcel)
     return result
+
+def classify_suitability_grid(slope_grid, flood_grid, max_slope, max_flood):
+    '''
+    Builds a new grid, same dimensions, where each cell is 1 (suitable), 
+    0 (not suitable), or None (NoData in either input)
+    '''
+    rows = len(slope_grid)
+    cols = len(slope_grid[0])
+
+    if len(flood_grid) != rows or any(len(row) != cols for row in flood_grid):#check if they have matching dimensions
+        raise ValueError("slope_grid and flood_grid must have matching dimensions")
+    
+    result = []
+    for r in range(rows):
+        result_row = []
+        for c in range(cols):
+            slope = slope_grid[r][c]
+            flood = flood_grid[r][c]
+            if slope is None or flood is None:
+                result_row.append(None)
+            elif slope <= max_slope and flood <= max_flood:
+                result_row.append(1)
+            else:
+                result_row.append(0)
+        result.append(result_row)
+    return result
+
+def count_suitable_cells(suitability_grid):
+    '''
+    counts how many 1s are in that output grid, using an explicit loop
+    '''
+    count = 0
+    for row in suitability_grid:
+        for cell in row:
+            if cell == 1:
+                count += 1
+    return count

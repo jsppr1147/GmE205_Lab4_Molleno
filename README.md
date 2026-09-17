@@ -118,3 +118,12 @@ Part F: Spatial Predicate as Part of the Algorithm
 - Updated run_lab4.py using a shapely.geometry.box. This is already wrapped in SpatialObject so it exposes the .intersects() interface as Parcel. 
 - No new spatial logic needed since SpatialObject already supports the instantiation.
 - Answered the question ("which development candidates also intersect the study area?") by composing existing functions.
+
+Part G: Raster Transfer with Same Control Structures, Different Representation 
+- added analysis for the suitability_grid.json, classify_suitability_grid
+- added loading of slopes and flood grids.
+- added verification if both grids have same rows and columns
+- added iteration for processing row then column 
+- added condition for 0, 1, and NULL data
+- returns the suitability grid and suitable cell count. 
+- updated the demo py for checking

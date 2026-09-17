@@ -1,6 +1,7 @@
 import json
 from spatial import Parcel
-from analysis import (total_active_area, parcels_above_threshold, count_by_zone, development_candidates)
+from analysis import (total_active_area, parcels_above_threshold, count_by_zone, development_candidates,
+                      classify_suitability_grid,count_suitable_cells)
 
 with open("data/parcels_shapely_ready.json", encoding="utf-8") as f:
     records = json.load(f)
@@ -8,7 +9,7 @@ with open("data/parcels_shapely_ready.json", encoding="utf-8") as f:
 sample = Parcel.from_dict(records[0])  # checks first parcel data
 #print(sample.zone, sample.area_sqm, sample.is_active)
 #print(sample.bbox())
-
+'''
 parcels = [Parcel.from_dict(record) for record in records]
 
 # check 1: if zone count sum equal to total parcel count
@@ -34,3 +35,17 @@ print(f"With min_area=3000: {len(more)} candidates (was {len(candidates)} at 500
 
 fewer = development_candidates(parcels, 7000.0, ALLOWED_ZONES)
 print(f"With min_area=7000: {len(fewer)} candidates (was {len(candidates)} at 5000)")
+'''
+####-----------RASTER---------------------######
+with open("data/suitability_grid.json", encoding="utf-8") as f:
+    grid_data = json.load(f)
+
+criteria = grid_data["criteria"]
+suitability = classify_suitability_grid(
+    grid_data["slope_deg"],
+    grid_data["flood_m"],
+    max_slope=criteria["max_slope_deg"],
+    max_flood=criteria["max_flood_m"],
+)
+print("Suitability grid:", suitability)
+print("Suitable cells:", count_suitable_cells(suitability))
