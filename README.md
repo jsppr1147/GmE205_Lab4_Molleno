@@ -144,6 +144,15 @@ Part H: Run the Complete Workflow and Produce Evidence
 Part I: Testing and Debugging markdown
 - Created tests/test_spatial.py and tests/test_analysis.py, using small hand-crafted synthetic parcels/grids instead of the full dataset, so expected outputs can be verified by hand rather than assumed.
 - test_spatial.py verifies Parcel.from_dict(...) sets the expected parcel_id, zone, activity, area, and a real Shapely Polygon geometry with a matching bounding box.
+- test_analysis.py covers each analysis function individually:
+  - total_active_area which excludes an inactive parcel from the sum.
+  - parcels_above_threshold includes the exact-threshold case (rule is >=).
+  - count_by_zone returns correct per-zone counts for a small mixed sample.
+  - development_candidates has **separate** test cases rejecting a parcel for being inactive, for a disallowed zone, and for being under the area minimum and another case confirming a valid parcel is accepted, so a failure points to the exact broken condition instead of one vague "it doesn't work."
+  - intersecting_parcels includes one parcel that spatially overlaps a synthetic study area and one that doesn't, confirming both inclusion and exclusion.
+  - classify_suitability_grid covers all three output states (1, 0, None/NoData) in one small synthetic grid.
+  - count_suitable_cells confirms 0 and None cells are correctly excluded from the count.
 MOREOVER~~~~~~~
 - Added pytest.ini (pythonpath = src) at the project root so tests/ can import spatial/analysis without path errors, since the project uses a src-layout.
+- Verified the I.3 invariants are satisfied by the test set: zone counts sum to total parcels, every returned candidate independently passes active/zone/area checks, and raster output dimensions match input dimensions.
 - Ran pytest -v from the project root; all tests pass.
